@@ -12,8 +12,19 @@ builder.Services.AddSwaggerGen();
 var clock = new UptimeClock();
 builder.Services.AddSingleton<UptimeClock>(clock);
 
+builder.Services.AddCors(OptionsBuilderConfigurationExtensions =>
+{
+    OptionsBuilderConfigurationExtensions.AddDefaultPolicy(pol =>
+    {
+        pol.AllowAnyOrigin();
+        pol.AllowAnyHeader();
+        pol.AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
+app.UseCors();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
