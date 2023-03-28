@@ -1,6 +1,5 @@
 using OnCallDeveloperApi.Models;
-
- 
+using OnCallDeveloperApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddScoped<IProvideSupportSchedule, SupportSchedule>();
 
 var app = builder.Build();
 
@@ -34,22 +33,28 @@ if (app.Environment.IsDevelopment())
 
 
 
-app.MapGet("/oncalldeveloper", () =>
+app.MapGet("/oncalldeveloper", (IProvideSupportSchedule supportSchedule) =>
 
 {
-
-    var response = new OnCallDeveloperModel
-
+    OnCallDeveloperModel response;
+    if (supportSchedule.InternalSupportAvailable)
     {
-
-        Name = "Bob Smith",
-
-        Phone = "888-8888",
-
-        Email = "bob@company.com"
-
-    };
-
+        response = new OnCallDeveloperModel
+        {
+            Name = "Bob Smith",
+            Phone = "888-8888",
+            Email = "bob@company.com"
+        };
+    }
+    else
+    {
+        response = new OnCallDeveloperModel
+        {
+            Name = "House of Outsourced Support, Inc.",
+            Phone = "800 111-1111",
+            Email = "support@house-of-outsourced-support.com"
+        };
+    }
     return Results.Ok(response);
 
 });
