@@ -9,8 +9,10 @@ public class UptimeClock
         _startTime = DateTime.Now;
     }
 
-    public DateTime UpSince {
-        get{
+    public DateTime UpSince
+    {
+        get
+        {
             return _startTime;
         }
     }
