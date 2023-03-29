@@ -7,10 +7,12 @@ namespace LocationsApi.Controllers;
 public class LocationsController : ControllerBase
 {
     private readonly IDocumentSession _context;
+
     public LocationsController(IDocumentSession context)
     {
         _context = context;
     }
+
     [HttpGet("/locations")]
     public async Task<ActionResult>  GetLocations()
     {
@@ -22,8 +24,9 @@ public class LocationsController : ControllerBase
     [HttpPost("/locations")]
     public async Task<ActionResult> AddLocation([FromBody] LocationCreate request)
     {
-        if(!ModelState.IsValid) {
-            return BadRequest(ModelState);
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState); // 400
         }
 
         var locationToAdd = new LocationItemResponse
@@ -31,13 +34,13 @@ public class LocationsController : ControllerBase
             Name = request.Name,
             Description = request.Description,
             Id = Guid.NewGuid().ToString(),
-            AddedBy = "Lloyd",
+            AddedBy = "bob",
             AddedOn = DateTime.Now,
         };
         _context.Store<LocationItemResponse>(locationToAdd);
         // add all the things.
-
         await _context.SaveChangesAsync();
-        return Ok(locationToAdd);
+
+        return Ok(locationToAdd); 
     }
 }
